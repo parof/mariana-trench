@@ -345,6 +345,10 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
       "Reflection analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
       reflection_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  for (const auto& type : options.untaintable_types()) {
+    untaintable_types_.insert(DexType::make_type(type));
+  }
 }
 
 std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(

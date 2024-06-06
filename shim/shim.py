@@ -96,6 +96,19 @@ def _heuristics_json_config_exists(input: str) -> str:
             )
 
 
+def _sanitize_types_file_exists(input: str) -> str:
+    path = _path_exists(input)
+    with open(path) as file:
+        try:
+            # Sanitized types are a list of strings.
+            safe_json.load(file, List[str])
+            return path
+        except safe_json.InvalidJson:
+            raise argparse.ArgumentTypeError(
+                f"`{path}` must be a valid JSON file with a list of strings"
+            )
+
+
 class ExtractJexException(ClientError):
     pass
 
@@ -484,6 +497,14 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
             "available heuristics parameters."
         ),
     )
+    configuration_arguments.add_argument(
+        "--sanitize-types",
+        type=_sanitize_types_file_exists,
+        help=(
+            "Path to JSON file containing a list of types that must be "
+            "sanitized."
+        ),
+    )
 
 
 def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
@@ -692,6 +713,10 @@ def _get_command_options(
     if arguments.heuristics:
         options.append("--heuristics")
         options.append(arguments.heuristics)
+
+    if arguments.sanitize_types:
+        options.append("--sanitize-types")
+        options.append(arguments.sanitize_types)
 
     if arguments.sequential:
         options.append("--sequential")

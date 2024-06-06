@@ -151,6 +151,7 @@ class Types final {
   std::unique_ptr<type_analyzer::global::GlobalTypeAnalyzer>
       global_type_analyzer_;
   std::vector<std::string> log_method_types_;
+  std::unordered_set<const DexType*> untaintable_types_;
 };
 
 } // namespace marianatrench

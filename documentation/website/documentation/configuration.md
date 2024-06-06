@@ -67,6 +67,9 @@ For performance reasons it can be useful to limit the maximum length of a trace 
 #### `--heuristics HEURISTICS_FILE_PATH`
 Mariana Trench uses various heuristics parameters during the analysis. It is possible to set some of them with a JSON configuration file. The complete list of configurable parameters is reported in the [heuristics parameters section](#heuristics-parameters). It is optional to specify a configuration for the heuristics parameters, and the the parameters that are not specified are set to a default value.
 
+#### `--sanitize-types SANITIZE_TYPES_FILE_PATH`
+It is possible to specify a list of types that have to be sanitized during the analysis. These types can never be sources nor sinks, and they do not propagate taint. The file must be a valid JSON file composed of a list of strings representing the types.
+
 ## Heuristics Parameters
 
 #### `join_override_threshold INT`

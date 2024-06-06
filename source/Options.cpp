@@ -303,6 +303,15 @@ Options::Options(const boost::program_options::variables_map& variables) {
     auto json = JsonReader::parse_json_file(heuristics_path);
     heuristics_ = Heuristics::from_json(json);
   }
+
+  if (!variables["sanitize-types"].empty()) {
+    auto sanitize_types_path =
+        check_path_exists(variables["sanitize-types"].as<std::string>());
+    auto json = JsonReader::parse_json_file(sanitize_types_path);
+    for (const auto& value : JsonValidation::null_or_array(json)) {
+      untaintable_types_.push_back(JsonValidation::string(value));
+    }
+  }
 }
 
 void Options::add_options(
@@ -476,6 +485,10 @@ void Options::add_options(
       "heuristics",
       program_options::value<std::string>(),
       "Path to JSON configuration file which specifies heuristics parameters to use during the analysis. See the documentation for available heuristics parameters.");
+  options.add_options()(
+      "sanitize-types",
+      program_options::value<std::string>(),
+      "Path to JSON file containing a list of types that must be sanitized.");
 }
 
 const std::vector<std::string>& Options::models_paths() const {
@@ -722,6 +735,10 @@ bool Options::propagate_across_arguments() const {
 
 const marianatrench::Heuristics& Options::heuristics() const {
   return heuristics_;
+}
+
+const std::vector<std::string>& Options::untaintable_types() const {
+  return untaintable_types_;
 }
 
 } // namespace marianatrench

@@ -127,6 +127,7 @@ class Options final {
   bool propagate_across_arguments() const;
 
   const Heuristics& heuristics() const;
+  const std::vector<std::string>& untaintable_types() const;
 
  private:
   std::vector<std::string> models_paths_;
@@ -188,6 +189,7 @@ class Options final {
   bool propagate_across_arguments_;
 
   Heuristics heuristics_;
+  std::vector<std::string> untaintable_types_;
 };
 
 } // namespace marianatrench
